@@ -50,15 +50,15 @@ class Controls {
         // initialize extraction fan
         if (this.conf.extractionFan && this.conf.extractionFan.gpio) {
             this.extractionFan = new Gpio(this.conf.extractionFan.gpio, 'out');
-            this.turnExtractionFan(0);
             this._debug(9,"init fan");
+            this.turnExtractionFan(0);
         }
 
         // initialize mister
         if (this.conf.mister && this.conf.mister.gpio) {
             this.mister = new Gpio(this.conf.mister.gpio, 'out');
-            this.turnMister(0);
             this._debug(9,"init mister");
+            this.turnMister(0);
         }
 
         
@@ -73,14 +73,14 @@ class Controls {
     }
 
     turnMister(status) {
-        this._debug(9,"mister is now "+(status?"OFF":"ON"));
         if (!this.mister) return ;
+        this._debug(9,"mister is now "+(status?"OFF":"ON"));
         this.mister.writeSync(!status); // inverted on raspberry
     }
 
     turnExtractionFan(status) {
-        this._debug(9,"fan is now "+(status?"OFF":"ON"));
         if (!this.extractionFan) return ;
+        this._debug(9,"fan is now "+(status?"OFF":"ON"));
         this.extractionFan.writeSync(!status); // inverted on raspberry
     }
 
