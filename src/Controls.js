@@ -10,6 +10,9 @@ var Gpio = require('onoff').Gpio; // https://www.npmjs.com/package/onoff
 
 var DEBUGLEVEL = 9;
 
+const ON = 0;
+const OFF = 1;
+
 class Controls {
 
     constructor() {
@@ -35,6 +38,12 @@ class Controls {
             }
         };
 
+        this.counter = {
+            monitor: 0,
+            fan: 0,
+            mist: 0
+        }
+
         // load previous configuration form config file
         if (fs.existsSync('config.json')) {
             this.conf = JSON.parse(fs.readFileSync('config.json'));
@@ -52,40 +61,19 @@ class Controls {
         // initialize extraction fan
         if (this.conf.extractionFan && this.conf.extractionFan.gpio) {
             this.extractionFan = new Gpio(this.conf.extractionFan.gpio, 'out');
-            this._debug(9,"init fan");
-            this.turnExtractionFan(0);
+            this.extractionFan.writeSync(OFF);
         }
 
         // initialize mister
         if (this.conf.mister && this.conf.mister.gpio) {
             this.mister = new Gpio(this.conf.mister.gpio, 'out');
-            this._debug(9,"init mister");
-            this.turnMister(0);
+            this.mister.writeSync(OFF);
         }
-
         
-        // start loops
-        if (this.sensor) {
-            this._startHumidityMonitor();
-        } else {
-            this._startMisterTimerLoop();
-        }
-
-        this._startExtractionFanTimerLoop();
-    }
-
-    turnMister(status) {
-        if (!this.mister) return ;
-        this._debug(9,"mister is now "+status);
-        if (status===0) status = 1; else status = 0;
-        this.mister.writeSync(status); // inverted on raspberry
-    }
-
-    turnExtractionFan(status) {
-        if (!this.extractionFan) return ;
-        this._debug(9,"fan is now "+status);
-        if (status===0) status = 1; else status = 0;
-        this.extractionFan.writeSync(status); // inverted on raspberry
+        var self = this;
+        setInterval(function() {
+            self._mituteLoop();
+        },10000); // 10 seconds instead 1 minute (for testing)
     }
 
     updateConf() {
@@ -96,15 +84,11 @@ class Controls {
         if (this.conf.sensor.type==="none") {
             // destroy previous sensor
             this.sensor = null;
-            this._startMisterTimerLoop();
         }
         if (this.conf.sensor.type!=="none") {
             // initialize sensor
             if (!this.sensor) this._initSensor();
-            this._startHumidityMonitor();
         }
-
-        this._startExtractionFanTimerLoop();
     }
 
     _initSensor() {
@@ -112,51 +96,38 @@ class Controls {
         Sensor.initialize(this.conf.sensor.type, this.conf.sensor.gpio);
     }
 
-    /** Loop to read humidity and start/stop the mister */
-    _startHumidityMonitor() {
-        clearInterval(this.misterTimer);
-        var self = this;
-        this.humidityTimer = setInterval(function() {
-            this.sensor.read(this.conf.sensor.type, this.conf.sensor.gpio, function(r) {
-                if (r.humidity >= this.conf.humidity.max) {
-                    self.turnMister(0);
-                } else if (r.humidity <= this.conf.humidity.min) {
-                    self.turnMister(1);
-                }
-            });
-        }, 2000);
-    }
+    _mituteLoop() {
+        // check fan
+        if (this.extractionFan) {
+            let fanStatus = this.extractionFan.readSync();
+            if (fanStatus===ON && this.counter.fan>=this.conf.extractionFan.minutesOn) {
+                this.counter.fan = 0;
+                this.extractionFan.writeSync(OFF);
+                this._debug(6,"Turning fan OFF");
+            } else if (fanStatus===OFF && this.counter.fan>=this.conf.extractionFan.minutesOff) {
+                this.counter.fan = 0;
+                this.extractionFan.writeSync(ON);
+                this._debug(6,"Turning fan ON");
+            } else {
+                this.counter.fan++;
+            }
+        }
 
-    /** Loop to start/stop the mister on time base */
-    _startMisterTimerLoop() {
-        this._debug(6,"starting mister timer "+(this.conf.mister.minutesOff + this.conf.mister.minutesOn));
-        clearInterval(this.humidityTimer);
-        var self = this;
-        this.misterTimer = setInterval(function() {
-            self._debug(7,"Looping mister ON");
-            self.turnMister(1);
-            setTimeout(function() {
-                self._debug(7,"Looping mister OFF");
-                self.turnMister(0);
-            },self.conf.mister.minutesOn * 60 * 1000);
-        }, (this.conf.mister.minutesOff + this.conf.mister.minutesOn) * 60 * 1000 );
+        // check mister
+        if (this.mister) {
+            let mistStatus = this.mister.readSync();
+            if (mistStatus===ON && this.counter.mist>=this.conf.mister.minutesOn) {
+                this.counter.mist = 0;
+                this.mister.writeSync(OFF);
+                this._debug(6,"Turning mister OFF");
+            } else if (mistStatus===OFF && this.counter.mist>=this.conf.mister.minutesOff) {
+                this.counter.mist = 0;
+                this.mister.writeSync(ON);
+                this._debug(6,"Turning mister ON");
+            }
+        }
+        
     }
-
-    /** Loop to start/stop the extraction fan */
-    _startExtractionFanTimerLoop() {
-        this._debug(6,"starting extraction fan timer "+(this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn));
-        clearInterval(this.extractionTimer);
-        var self = this;
-        this.extractionTimer = setInterval(function() {
-            self._debug(7,"Looping fan ON");
-            self.turnExtractionFan(1);
-            setTimeout(function() {
-                self._debug(7,"Looping fan OFF");
-                self.turnExtractionFan(0);
-            },self.conf.extractionFan.minutesOn * 60 * 1000);
-        }, (this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn) * 60 * 1000 );
-    }
-
     readSensor() {
         return this.sensor.read(this.conf.sensor.type, this.conf.sensor.gpio);
     }
@@ -177,6 +148,23 @@ class Controls {
         
         return year + "-" + month + "-" + date + " " + (hours<=9?"0":"")+hours + ":" + (minutes<=9?"0":"")+minutes + ":" + (seconds<=9?"0":"")+seconds;
     }
+
+/*
+    _startHumidityMonitor() {
+        this._debug(6,"starting humidity monitor every 2 seconds");
+        clearInterval(this.misterTimer);
+        var self = this;
+        this.humidityTimer = setInterval(function() {
+            self.sensor.read(self.conf.sensor.type, self.conf.sensor.gpio, function(r) {
+                if (r.humidity >= this.conf.humidity.max) {
+                    self.turnMister(0);
+                } else if (r.humidity <= self.conf.humidity.min) {
+                    self.turnMister(1);
+                }
+            });
+        }, 2000);
+    }
+*/
 }
 
 module.exports = Controls;  
