@@ -8,6 +8,8 @@ const fs = require("fs");
 var Sensor = require("node-dht-sensor"); // https://www.npmjs.com/package/node-dht-sensor
 var Gpio = require('onoff').Gpio; // https://www.npmjs.com/package/onoff
 
+var DEBUGLEVEL = 6;
+
 class Controls {
 
     constructor() {
@@ -160,6 +162,7 @@ class Controls {
     }
     
     _debug(level,message) {
+        if (level>DEBUGLEVEL) return;
         console.log(this._getDate() +` > [${level}] ${message}`);
     }
 
@@ -172,7 +175,7 @@ class Controls {
         let minutes = date_ob.getMinutes();
         let seconds = date_ob.getSeconds();
 
-        return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+        return year + "-" + month + "-" + date + " " + (hours>=9?"0":"")+hours + ":" + (minutes>=9?"0":"")+minutes + ":" + (seconds>=9?"0":"")+seconds;
     }
 }
 
