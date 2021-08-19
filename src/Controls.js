@@ -53,7 +53,7 @@ class Controls {
 
     init() {
 
-        self._debug(2,'Booting...');
+        this._debug(2,'Booting...');
 
         // initialize sensor
         if (this.conf.sensor && this.conf.sensor.gpio && this.conf.sensor.type!="none") {
@@ -72,7 +72,7 @@ class Controls {
             this.mister.writeSync(OFF);
         }
 
-        self._debug(2,'Initialization completed');
+        this._debug(2,'Initialization completed');
 
         var self = this;
         setInterval(function() {
