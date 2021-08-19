@@ -8,7 +8,7 @@ const fs = require("fs");
 var Sensor = require("node-dht-sensor"); // https://www.npmjs.com/package/node-dht-sensor
 var Gpio = require('onoff').Gpio; // https://www.npmjs.com/package/onoff
 
-var DEBUGLEVEL = 6;
+var DEBUGLEVEL = 9;
 
 class Controls {
 
