@@ -1,0 +1,15 @@
+raspi-config
+# configure hostname, wifi & SSH
+
+# change pi user password
+adduser bebbo
+usermod -a -G sudo bebbo
+usermod -a -G adm bebbo
+echo 'bebbo ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/010_bebbo-nopasswd
+chmod 600 /etc/sudoers.d/010_bebbo-nopasswd
+
+
+apt-update && apt-upgrade -y
+apt autoremove
+
+apt install nodejs npm git -y

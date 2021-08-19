@@ -7,8 +7,6 @@
 var Sensor = require("node-dht-sensor"); // https://www.npmjs.com/package/node-dht-sensor
 var Gpio = require('onoff').Gpio; // https://www.npmjs.com/package/onoff
 
-var skipGPIO = true;
-
 class Controls {
 
     constructor() {
@@ -47,8 +45,6 @@ class Controls {
         } else {
             this._startMisterTimerLoop();
         }
-
-        if (skipGPIO) return ;
 
         // initialize extraction fan
         if (this.conf.extractionFan && this.conf.extractionFan.gpio) {
@@ -98,7 +94,7 @@ class Controls {
 
     _initSensor() {
         this.sensor = Sensor;
-        if (!skipGPIO) Sensor.initialize(this.conf.sensor.type, this.conf.sensor.gpio);
+        Sensor.initialize(this.conf.sensor.type, this.conf.sensor.gpio);
     }
 
     /** Loop to read humidity and start/stop the mister */
@@ -137,7 +133,6 @@ class Controls {
     }
 
     readSensor() {
-        if (skipGPIO) return { humidity: 84, temperature: 21 }
         return this.sensor.read(this.conf.sensor.type, this.conf.sensor.gpio);
     }
     
