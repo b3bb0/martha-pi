@@ -4,7 +4,6 @@ Martha mushroom grow room on raspberry-pi - *Cheap & practical martha automation
 ![Fritz](public/images/fritz.png?raw=true)
 
 
-
 ## Usage
 
 ### **install**
@@ -20,6 +19,7 @@ node app.js
 ```
 Then visit http://127.0.0.1:3000
 
+![configuration page](public/images/screenshot.png?raw=true)
 
 ## Materials
 - 1 raspberry pi, any will work, the cheaper the better!
