@@ -113,12 +113,13 @@ class Controls {
     /** Loop to read humidity and start/stop the mister */
     _startHumidityMonitor() {
         clearInterval(this.misterTimer);
+        var self = this;
         this.humidityTimer = setInterval(function() {
-            this.sensor.read(this.conf.sensor.type, this.conf.sensor.gpio, function(r) { 
+            this.sensor.read(this.conf.sensor.type, this.conf.sensor.gpio, function(r) {
                 if (r.humidity >= this.conf.humidity.max) {
-                    this.turnMister(0);
+                    self.turnMister(0);
                 } else if (r.humidity <= this.conf.humidity.min) {
-                    this.turnMister(1);
+                    self.turnMister(1);
                 }
             });
         }, 2000);
@@ -126,12 +127,16 @@ class Controls {
 
     /** Loop to start/stop the mister on time base */
     _startMisterTimerLoop() {
+        this._debug(6,"starting mister timer "+(this.conf.mister.minutesOff + this.conf.mister.minutesOn));
         clearInterval(this.humidityTimer);
+        var self = this;
         this.misterTimer = setInterval(function() {
-            this.turnMister(1);
+            self._debug(7,"Looping mister ON");
+            self.turnMister(1);
             setTimeout(function() {
-                this.turnMister(0);
-            },this.conf.mister.minutesOn * 60 * 1000);
+                self._debug(7,"Looping mister OFF");
+                self.turnMister(0);
+            },self.conf.mister.minutesOn * 60 * 1000);
         }, (this.conf.mister.minutesOff + this.conf.mister.minutesOn) * 60 * 1000 );
     }
 
@@ -155,7 +160,19 @@ class Controls {
     }
     
     _debug(level,message) {
-        console.log(message);
+        console.log(this._getDate +` > [${level}] ${message}`);
+    }
+
+    _getDate() {
+        let date_ob = new Date();
+        let date = ("0" + date_ob.getDate()).slice(-2);
+        let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+        let year = date_ob.getFullYear();
+        let hours = date_ob.getHours();
+        let minutes = date_ob.getMinutes();
+        let seconds = date_ob.getSeconds();
+
+        return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
     }
 }
 
