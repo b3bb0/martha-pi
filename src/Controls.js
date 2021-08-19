@@ -160,7 +160,7 @@ class Controls {
     }
     
     _debug(level,message) {
-        console.log(this._getDate +` > [${level}] ${message}`);
+        console.log(this._getDate() +` > [${level}] ${message}`);
     }
 
     _getDate() {
