@@ -83,14 +83,14 @@ class Controls {
         // save configuration to json file
         fs.writeFileSync('config.json',JSON.stringify(this.conf));
 
-        if (this.sensor && this.conf.sensor.type==="none") {
+        if (this.conf.sensor.type==="none") {
             // destroy previous sensor
             this.sensor = null;
             this._startMisterTimerLoop();
         }
-        if (!this.sensor && this.conf.sensor.type!=="none") {
+        if (this.conf.sensor.type!=="none") {
             // initialize sensor
-            this._initSensor();
+            if (!this.sensor) this._initSensor();
             this._startHumidityMonitor();
         }
     }
