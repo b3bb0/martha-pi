@@ -81,7 +81,7 @@ class Controls {
 
     turnExtractionFan(status) {
         if (!this.extractionFan) return ;
-        this._debug(9,"fan is now "++status);
+        this._debug(9,"fan is now "+status);
         if (status===0) status = 1; else status = 0;
         this.extractionFan.writeSync(status); // inverted on raspberry
     }
