@@ -95,6 +95,8 @@ class Controls {
             if (!this.sensor) this._initSensor();
             this._startHumidityMonitor();
         }
+
+        this._startMisterTimerLoop();
     }
 
     _initSensor() {
