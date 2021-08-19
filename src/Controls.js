@@ -35,7 +35,7 @@ class Controls {
 
         // load previous configuration form config file
         if (fs.existsSync('config.json')) {
-            this.conf = JSON.parse(fs.readFileSync('config.json'))
+            this.conf = JSON.parse(fs.readFileSync('config.json'));
         }
         
     }
@@ -141,7 +141,7 @@ class Controls {
         clearInterval(this.extractionTimer);
         var self = this;
         this.extractionTimer = setInterval(function() {
-            self._debug(7,"Looping fan ON");
+            this._debug(7,"Looping fan ON");
             self.turnExtractionFan(1);
             setTimeout(function() {
                 self._debug(7,"Looping fan OFF");

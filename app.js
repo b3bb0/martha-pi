@@ -33,19 +33,19 @@ var web = http.createServer(function (req, res) {
 
         req.on("end", function(){
             var x = querystring.parse(body);
-            martha.conf.mister.gpio = x.misterGPIO;
-            martha.conf.mister.minutesOn = x.misterOn;
-            martha.conf.mister.minutesOff = x.misterOff;
+            martha.conf.mister.gpio = parseInt(x.misterGPIO);
+            martha.conf.mister.minutesOn = parseInt(x.misterOn);
+            martha.conf.mister.minutesOff = parseInt(x.misterOff);
 
-            martha.conf.extractionFan.gpio = x.fanGPIO;
-            martha.conf.extractionFan.minutesOn = x.fanOn;
-            martha.conf.extractionFan.minutesOff = x.fanOff;
+            martha.conf.extractionFan.gpio = parseInt(x.fanGPIO);
+            martha.conf.extractionFan.minutesOn = parseInt(x.fanOn);
+            martha.conf.extractionFan.minutesOff = parseInt(x.fanOff);
 
-            martha.conf.humidity.min = x.minRH;
-            martha.conf.humidity.max = x.maxRH;
+            martha.conf.humidity.min = parseInt(x.minRH);
+            martha.conf.humidity.max = parseInt(x.maxRH);
 
-            martha.conf.sensor.gpio = x.sensorGPIO;
-            martha.conf.sensor.type = x.sensorType;
+            martha.conf.sensor.gpio = parseInt(x.sensorGPIO);
+            martha.conf.sensor.type = parseInt(x.sensorType);
 
             martha.updateConf();
         });
