@@ -146,8 +146,8 @@ class Controls {
             setTimeout(function() {
                 self._debug(7,"Looping fan OFF");
                 self.turnExtractionFan(0);
-            },self.conf.extractionFan.minutesOn * 60 * 1000);
-        }, (this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn) * 60 * 1000 );
+            },self.conf.extractionFan.minutesOn * 1000);
+        }, (this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn) * 1000 );
     }
 
     readSensor() {
