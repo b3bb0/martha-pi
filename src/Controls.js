@@ -57,48 +57,53 @@ class Controls {
 
         // initialize sensor
         if (this.conf.sensor && this.conf.sensor.gpio && this.conf.sensor.type!="none") {
-            this._initSensor();
+            this.sensor = Sensor;
+            Sensor.initialize(this.conf.sensor.type, this.conf.sensor.gpio);
+        } else {
+            this.sensor = null;
         }
 
         // initialize extraction fan
         if (this.conf.extractionFan && this.conf.extractionFan.gpio) {
             this.extractionFan = new Gpio(this.conf.extractionFan.gpio, 'out');
             this.extractionFan.writeSync(OFF);
+        } else {
+            this.extractionFan = null;
         }
 
         // initialize mister
         if (this.conf.mister && this.conf.mister.gpio) {
             this.mister = new Gpio(this.conf.mister.gpio, 'out');
             this.mister.writeSync(OFF);
+        } else {
+            this.mister = null;
         }
 
         this._debug(2,'Initialization completed');
+    }
+
+    run() {
+        this._mituteLoop();
 
         var self = this;
         setInterval(function() {
             self._debug(9,'looping...');
             self._mituteLoop();
-        },10000); // 10 seconds instead 1 minute (for testing)
+        },60000); // 1 minute loop
+
+        setInterval(function() {
+            self._secondsLoop();
+        },5000); // 5 seconds
     }
 
     updateConf() {
-        this._debug(2,"reloading configuration");
+        this._debug(3,"reloading configuration");
+
         // save configuration to json file
         fs.writeFileSync('config.json',JSON.stringify(this.conf));
 
-        if (this.conf.sensor.type==="none") {
-            // destroy previous sensor
-            this.sensor = null;
-        }
-        if (this.conf.sensor.type!=="none") {
-            // initialize sensor
-            if (!this.sensor) this._initSensor();
-        }
-    }
-
-    _initSensor() {
-        this.sensor = Sensor;
-        Sensor.initialize(this.conf.sensor.type, this.conf.sensor.gpio);
+        // re-initialize
+        this.init();
     }
 
     _mituteLoop() {
@@ -118,33 +123,44 @@ class Controls {
             }
         }
 
-        // check mister
-        if (this.mister) {
+        // check mister (if not running via sensor)
+        if (this.mister && !this.sensor) {
             let mistStatus = this.mister.readSync();
             if (mistStatus===ON && this.counter.mist>=this.conf.mister.minutesOn) {
                 this.counter.mist = 0;
                 this.mister.writeSync(OFF);
-                this._debug(6,"Turning mister OFF");
+                this._debug(6,"Turning mister OFF (timer)");
             } else if (mistStatus===OFF && this.counter.mist>=this.conf.mister.minutesOff) {
                 this.counter.mist = 0;
                 this.mister.writeSync(ON);
-                this._debug(6,"Turning mister ON");
+                this._debug(6,"Turning mister ON  (timer)");
             } else {
                 ++this.counter.mist;
             }
         }
-        
     }
+
+    _secondsLoop() {
+        if (!this.sensor) return;
+        var self = this;
+        this.sensor.read(this.conf.sensor.type, this.conf.sensor.gpio, function(r) {
+            if (r.humidity >= self.conf.humidity.max) {
+                this._debug(6,"Turning mister OFF (sensor)");
+                this.mister.writeSync(OFF);
+            } else if (r.humidity <= self.conf.humidity.min) {
+                this._debug(6,"Turning mister ON  (sensor)");
+                this.mister.writeSync(ON);
+            }
+        });
+    }
+
     readSensor() {
         return this.sensor.read(this.conf.sensor.type, this.conf.sensor.gpio);
     }
     
     _debug(level,message) {
         if (level>DEBUGLEVEL) return;
-        console.log(this._getDate() +` > [${level}] ${message}`);
-    }
 
-    _getDate() {
         let date_ob = new Date();
         let date = ("0" + date_ob.getDate()).slice(-2);
         let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
@@ -153,25 +169,17 @@ class Controls {
         let minutes = date_ob.getMinutes();
         let seconds = date_ob.getSeconds();
         
-        return year + "-" + month + "-" + date + " " + (hours<=9?"0":"")+hours + ":" + (minutes<=9?"0":"")+minutes + ":" + (seconds<=9?"0":"")+seconds;
-    }
+        let dateFormat = year + "-" + month + "-" + date + " " + (hours<=9?"0":"")+hours + ":" + (minutes<=9?"0":"")+minutes + ":" + (seconds<=9?"0":"")+seconds;
 
-/*
-    _startHumidityMonitor() {
-        this._debug(6,"starting humidity monitor every 2 seconds");
-        clearInterval(this.misterTimer);
-        var self = this;
-        this.humidityTimer = setInterval(function() {
-            self.sensor.read(self.conf.sensor.type, self.conf.sensor.gpio, function(r) {
-                if (r.humidity >= this.conf.humidity.max) {
-                    self.turnMister(0);
-                } else if (r.humidity <= self.conf.humidity.min) {
-                    self.turnMister(1);
-                }
-            });
-        }, 2000);
+        var type = 'ERROR';
+        if (level>3) {
+            type = 'DEBUG-'+level;
+        } else if (level>1) {
+            type = 'INFO';
+        }
+
+        console.log(`${dateFormat} > [${type}] ${message}`);
     }
-*/
 }
 
 module.exports = Controls;  

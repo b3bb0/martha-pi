@@ -14,7 +14,8 @@ var martha = new Controls();
 
 martha.init();
 
-// TODO: save stats!
+martha.run();
+
 
 var web = http.createServer(function (req, res) {
 
