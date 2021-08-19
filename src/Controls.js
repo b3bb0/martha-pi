@@ -4,6 +4,7 @@
  * @description main server app 
  */
 
+const fs = require("fs");
 var Sensor = require("node-dht-sensor"); // https://www.npmjs.com/package/node-dht-sensor
 var Gpio = require('onoff').Gpio; // https://www.npmjs.com/package/onoff
 
@@ -32,8 +33,10 @@ class Controls {
             }
         };
 
-
-        // TODO: load conf from file
+        // load previous configuration form config file
+        if (fs.existsSync('config.json')) {
+            this.conf = JSON.parse(fs.readFileSync('config.json'))
+        }
         
     }
 
@@ -77,7 +80,9 @@ class Controls {
     }
 
     updateConf() {
-        // TODO: save conf on file
+        // save configuration to json file
+        fs.writeFile('config.json',JSON.stringify(this.conf));
+        
         if (this.sensor && this.conf.sensor.type==="none") {
             // destroy previous sensor
             this.sensor = null;
