@@ -154,7 +154,7 @@ class Controls {
         clearInterval(this.extractionTimer);
         var self = this;
         this.extractionTimer = setInterval( () => {
-            this._startExtractionFanTimerLoopExec();
+            self._startExtractionFanTimerLoopExec();
         }, (this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn) * 60 * 1000 );
         this._startExtractionFanTimerLoopExec();
     }
