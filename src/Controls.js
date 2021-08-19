@@ -137,7 +137,7 @@ class Controls {
 
     /** Loop to start/stop the extraction fan */
     _startExtractionFanTimerLoop() {
-        this._debug(6,"starting extraction fan timer");
+        this._debug(6,"starting extraction fan timer "+this.conf.extractionFan.minutesOff+" + "+this.conf.extractionFan.minutesOn);
         clearInterval(this.extractionTimer);
         var self = this;
         this.extractionTimer = setInterval(function() {
@@ -146,8 +146,8 @@ class Controls {
             setTimeout(function() {
                 self._debug(7,"Looping fan OFF");
                 self.turnExtractionFan(0);
-            },self.conf.extractionFan.minutesOn * 1000);
-        }, (this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn) * 1000 );
+            },self.conf.extractionFan.minutesOn * 60 * 1000);
+        }, (this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn) * 60 * 1000 );
     }
 
     readSensor() {
