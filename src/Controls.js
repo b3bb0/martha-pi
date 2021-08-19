@@ -40,10 +40,8 @@ class Controls {
     init() {
 
         // initialize sensor
-        if (this.conf.sensor && this.conf.sensor.gpio) {
+        if (this.conf.sensor && this.conf.sensor.gpio && this.conf.sensor.type!="none") {
             this._initSensor();
-        } else {
-            this._startMisterTimerLoop();
         }
 
         // initialize extraction fan

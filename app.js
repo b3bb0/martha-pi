@@ -64,5 +64,5 @@ var web = http.createServer(function (req, res) {
     }
     // load existing files automatically [stop]
 
-}).listen(3000);
+}).listen(80);
 
