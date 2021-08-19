@@ -1,8 +1,11 @@
-// https://www.npmjs.com/package/node-dht-sensor
-// https://www.w3schools.com/nodejs/nodejs_raspberrypi_blinking_led.asp
+/**
+ * @package Martha-pi
+ * @author Alberto bebbo Capponi <bebbo@bebbo.it>
+ * @description main server app 
+ */
 
-var Sensor = require("node-dht-sensor");
-var Gpio = require('onoff').Gpio;
+var Sensor = require("node-dht-sensor"); // https://www.npmjs.com/package/node-dht-sensor
+var Gpio = require('onoff').Gpio; // https://www.npmjs.com/package/onoff
 
 var skipGPIO = true;
 
