@@ -137,7 +137,7 @@ class Controls {
 
     /** Loop to start/stop the extraction fan */
     _startExtractionFanTimerLoop() {
-        this._debug(6,"starting extraction fan timer "+this.conf.extractionFan.minutesOff+" + "+this.conf.extractionFan.minutesOn);
+        this._debug(6,"starting extraction fan timer "+(this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn));
         clearInterval(this.extractionTimer);
         var self = this;
         this.extractionTimer = setInterval(function() {
