@@ -45,7 +45,7 @@ var web = http.createServer(function (req, res) {
             martha.conf.humidity.max = parseInt(x.maxRH);
 
             martha.conf.sensor.gpio = parseInt(x.sensorGPIO);
-            martha.conf.sensor.type = parseInt(x.sensorType);
+            martha.conf.sensor.type = (x.sensorType!="none"?parseInt(x.sensorType):"none");
 
             martha.updateConf();
         });
