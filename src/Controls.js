@@ -174,8 +174,8 @@ class Controls {
         let hours = date_ob.getHours();
         let minutes = date_ob.getMinutes();
         let seconds = date_ob.getSeconds();
-
-        return year + "-" + month + "-" + date + " " + (hours>=9?"0":"")+hours + ":" + (minutes>=9?"0":"")+minutes + ":" + (seconds>=9?"0":"")+seconds;
+        
+        return year + "-" + month + "-" + date + " " + (hours<=9?"0":"")+hours + ":" + (minutes<=9?"0":"")+minutes + ":" + (seconds<=9?"0":"")+seconds;
     }
 }
 
