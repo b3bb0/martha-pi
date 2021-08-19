@@ -1,0 +1,123 @@
+<html>
+<head>
+    <title>Martha-pi</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid"> <button class="navbar-toggler navbar-toggler-right border-0 p-0" type="button" data-toggle="collapse" data-target="#navbar20">
+                <p class="navbar-brand text-white mb-0"> <i class="fa d-inline fa-lg fa-tint"></i> MARTHA </p>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar20">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"> <a class="nav-link" href="/">Home</a> </li>
+                    <li class="nav-item"> <a class="nav-link active" href="/conf.html">Settings</a> </li>
+                </ul>
+                <p class="d-none d-md-block lead mb-0 text-white"> <i class="fa d-inline fa-lg fa-tint"></i> <b> MARTHA</b> </p>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item mx-1"> <a class="nav-link" href="#"> <i class="fa fa-github fa-fw fa-lg"></i> </a> </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section>
+        <div class="container">
+            <form id="confForm" action="conf.html" method="post">
+                <div class="row justify-content-center mt-4">
+
+                    <div class="col-3">
+                        <h2>Settings</h2>
+                        <div class="form-group">
+                            <label>Humidity Level</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="number" name="minRH" class="form-control" placeholder="Min RH%">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" name="maxRH" class="form-control" placeholder="Max RH%">
+                                </div>
+                            </div>
+                            <small id="emailHelp" class="form-text text-muted">Minimum & maximum relative humidity</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Extraction Fan</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="number" name="fanOn" class="form-control" placeholder="ON mins">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" name="fanOff" class="form-control" placeholder="OFF mins">
+                                </div>
+                            </div>
+                            <small id="emailHelp" class="form-text text-muted">Extraction fan timers</small>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-4">
+                    <div class="col-6">
+                        <h2>Configuration</h2>
+
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-right">Sensor Type</label>
+                            <div class="col-sm-8">
+                                <select name="sensorType" class="form-control">
+                                    <option value="none">Not installed</option>
+                                    <option value="11">DHT-11</option>
+                                    <option value="22">DHT-22</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-right">GPIO Sensor</label>
+                            <div class="col-sm-3">
+                                <input type="number" name="sensorGPIO" class="form-control" placeholder="eg 4">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-right">Extraction fan GPIO</label>
+                            <div class="col-sm-3">
+                                <input type="number" name="fanGPIO" class="form-control" placeholder="eg 17">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-right">Mister GPIO</label>
+                            <div class="col-sm-3">
+                                <input type="number" name="misterGPIO" class="form-control" placeholder="eg 18">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-right">Mister timers</label>
+                            <div class="col-sm-6">
+                                <div class="row">
+                            <div class="col-sm-6">
+                                <input type="number" name="misterOn" class="form-control" placeholder="ON mins">
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="number" name="misterOff" class="form-control" placeholder="OFF mins">
+                            </div>
+                            </div>
+
+                            <small id="emailHelp" class="form-text text-muted">Needed only is a sensor is not present</small>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+    <script src="/js/conf.js"></script>
+</body>
+</html>
