@@ -141,7 +141,7 @@ class Controls {
         clearInterval(this.extractionTimer);
         var self = this;
         this.extractionTimer = setInterval(function() {
-            this._debug(7,"Looping fan ON");
+            self._debug(7,"Looping fan ON");
             self.turnExtractionFan(1);
             setTimeout(function() {
                 self._debug(7,"Looping fan OFF");
