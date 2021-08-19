@@ -81,8 +81,8 @@ class Controls {
 
     updateConf() {
         // save configuration to json file
-        fs.writeFile('config.json',JSON.stringify(this.conf));
-        
+        fs.writeFileSync('config.json',JSON.stringify(this.conf));
+
         if (this.sensor && this.conf.sensor.type==="none") {
             // destroy previous sensor
             this.sensor = null;
