@@ -139,13 +139,14 @@ class Controls {
     _startExtractionFanTimerLoop() {
         this._debug(6,"starting extraction fan timer");
         clearInterval(this.extractionTimer);
+        var self = this;
         this.extractionTimer = setInterval(function() {
-            this._debug(7,"Looping fan ON");
-            this.turnExtractionFan(1);
+            self._debug(7,"Looping fan ON");
+            self.turnExtractionFan(1);
             setTimeout(function() {
-                this._debug(7,"Looping fan OFF");
-                this.turnExtractionFan(0);
-            },this.conf.extractionFan.minutesOn * 60 * 1000);
+                self._debug(7,"Looping fan OFF");
+                self.turnExtractionFan(0);
+            },self.conf.extractionFan.minutesOn * 60 * 1000);
         }, (this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn) * 60 * 1000 );
     }
 
