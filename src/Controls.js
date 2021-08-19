@@ -131,7 +131,10 @@ class Controls {
     _startMisterTimerLoop() {
         this._debug(6,"starting mister timer "+(this.conf.mister.minutesOff + this.conf.mister.minutesOn));
         clearInterval(this.humidityTimer);
-        this.misterTimer = setInterval(this._startMisterTimerLoopExec, (this.conf.mister.minutesOff + this.conf.mister.minutesOn) * 60 * 1000 );
+        var self = this;
+        this.misterTimer = setInterval(() => {
+            self._startMisterTimerLoopExec();
+        }, (this.conf.mister.minutesOff + this.conf.mister.minutesOn) * 60 * 1000 );
         this._startMisterTimerLoopExec();
     }
 
@@ -149,7 +152,10 @@ class Controls {
     _startExtractionFanTimerLoop() {
         this._debug(6,"starting extraction fan timer "+(this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn));
         clearInterval(this.extractionTimer);
-        this.extractionTimer = setInterval(this._startExtractionFanTimerLoopExec, (this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn) * 60 * 1000 );
+        var self = this;
+        this.extractionTimer = setInterval( () => {
+            this._startExtractionFanTimerLoopExec();
+        }, (this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn) * 60 * 1000 );
         this._startExtractionFanTimerLoopExec();
     }
 
