@@ -74,14 +74,16 @@ class Controls {
 
     turnMister(status) {
         if (!this.mister) return ;
-        this._debug(9,"mister is now "+(status?"OFF":"ON"));
-        this.mister.writeSync(!status); // inverted on raspberry
+        this._debug(9,"mister is now "+status);
+        if (status===0) status = 1; else status = 0;
+        this.mister.writeSync(status); // inverted on raspberry
     }
 
     turnExtractionFan(status) {
         if (!this.extractionFan) return ;
-        this._debug(9,"fan is now "+(status?"OFF":"ON"));
-        this.extractionFan.writeSync(!status); // inverted on raspberry
+        this._debug(9,"fan is now "++status);
+        if (status===0) status = 1; else status = 0;
+        this.extractionFan.writeSync(status); // inverted on raspberry
     }
 
     updateConf() {
@@ -99,7 +101,7 @@ class Controls {
             this._startHumidityMonitor();
         }
 
-        this._startMisterTimerLoop();
+        this._startExtractionFanTimerLoop();
     }
 
     _initSensor() {
@@ -134,6 +136,7 @@ class Controls {
 
     /** Loop to start/stop the extraction fan */
     _startExtractionFanTimerLoop() {
+        clearInterval(this.extractionTimer);
         this.extractionTimer = setInterval(function() {
             turnExtractionFan(1);
             setTimeout(function() {
