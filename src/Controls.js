@@ -72,13 +72,12 @@ class Controls {
 
     turnMister(status) {
         if (!this.mister) return ;
-        this.mister.writeSync(status);
-        // var status = this.mister.readSync();
+        this.mister.writeSync(!status); // inverted on raspberry
     }
 
     turnExtractionFan(status) {
         if (!this.extractionFan) return ;
-        this.extractionFan.writeSync(status);
+        this.extractionFan.writeSync(!status); // inverted on raspberry
     }
 
     updateConf() {
