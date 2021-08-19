@@ -53,6 +53,8 @@ class Controls {
 
     init() {
 
+        self._debug(2,'Booting...');
+
         // initialize sensor
         if (this.conf.sensor && this.conf.sensor.gpio && this.conf.sensor.type!="none") {
             this._initSensor();
@@ -69,10 +71,12 @@ class Controls {
             this.mister = new Gpio(this.conf.mister.gpio, 'out');
             this.mister.writeSync(OFF);
         }
-        
+
+        self._debug(2,'Initialization completed');
+
         var self = this;
         setInterval(function() {
-            self._debug('looping...');
+            self._debug(9,'looping...');
             self._mituteLoop();
         },10000); // 10 seconds instead 1 minute (for testing)
     }
@@ -110,7 +114,7 @@ class Controls {
                 this.extractionFan.writeSync(ON);
                 this._debug(6,"Turning fan ON");
             } else {
-                this.counter.fan++;
+                ++this.counter.fan;
             }
         }
 
@@ -125,6 +129,8 @@ class Controls {
                 this.counter.mist = 0;
                 this.mister.writeSync(ON);
                 this._debug(6,"Turning mister ON");
+            } else {
+                ++this.counter.mist;
             }
         }
         
