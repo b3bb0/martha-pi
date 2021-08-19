@@ -72,6 +72,7 @@ class Controls {
         
         var self = this;
         setInterval(function() {
+            self._debug('looping...');
             self._mituteLoop();
         },10000); // 10 seconds instead 1 minute (for testing)
     }
