@@ -87,6 +87,7 @@ class Controls {
     }
 
     updateConf() {
+        this._debug(2,"reloading configuration");
         // save configuration to json file
         fs.writeFileSync('config.json',JSON.stringify(this.conf));
 
@@ -115,9 +116,9 @@ class Controls {
         this.humidityTimer = setInterval(function() {
             this.sensor.read(this.conf.sensor.type, this.conf.sensor.gpio, function(r) { 
                 if (r.humidity >= this.conf.humidity.max) {
-                    turnMister(0);
+                    this.turnMister(0);
                 } else if (r.humidity <= this.conf.humidity.min) {
-                    turnMister(1);
+                    this.turnMister(1);
                 }
             });
         }, 2000);
@@ -127,20 +128,23 @@ class Controls {
     _startMisterTimerLoop() {
         clearInterval(this.humidityTimer);
         this.misterTimer = setInterval(function() {
-            turnMister(1);
+            this.turnMister(1);
             setTimeout(function() {
-                turnMister(0);
+                this.turnMister(0);
             },this.conf.mister.minutesOn * 60 * 1000);
         }, (this.conf.mister.minutesOff + this.conf.mister.minutesOn) * 60 * 1000 );
     }
 
     /** Loop to start/stop the extraction fan */
     _startExtractionFanTimerLoop() {
+        this._debug(6,"starting extraction fan timer");
         clearInterval(this.extractionTimer);
         this.extractionTimer = setInterval(function() {
-            turnExtractionFan(1);
+            this._debug(7,"Looping fan ON");
+            this.turnExtractionFan(1);
             setTimeout(function() {
-                turnExtractionFan(0);
+                this._debug(7,"Looping fan OFF");
+                this.turnExtractionFan(0);
             },this.conf.extractionFan.minutesOn * 60 * 1000);
         }, (this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn) * 60 * 1000 );
     }
