@@ -132,20 +132,14 @@ class Controls {
         this._debug(6,"starting mister timer "+(this.conf.mister.minutesOff + this.conf.mister.minutesOn));
         clearInterval(this.humidityTimer);
         var self = this;
-        this.misterTimer = setInterval(() => {
-            self._startMisterTimerLoopExec();
+        this.misterTimer = setInterval(function() {
+            self._debug(7,"Looping mister ON");
+            self.turnMister(1);
+            setTimeout(function() {
+                self._debug(7,"Looping mister OFF");
+                self.turnMister(0);
+            },self.conf.mister.minutesOn * 60 * 1000);
         }, (this.conf.mister.minutesOff + this.conf.mister.minutesOn) * 60 * 1000 );
-        this._startMisterTimerLoopExec();
-    }
-
-    _startMisterTimerLoopExec() {
-        var self = this;
-        self._debug(7,"Looping mister ON");
-        self.turnMister(1);
-        setTimeout(function() {
-            self._debug(7,"Looping mister OFF");
-            self.turnMister(0);
-        },self.conf.mister.minutesOn * 60 * 1000);
     }
 
     /** Loop to start/stop the extraction fan */
@@ -153,20 +147,14 @@ class Controls {
         this._debug(6,"starting extraction fan timer "+(this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn));
         clearInterval(this.extractionTimer);
         var self = this;
-        this.extractionTimer = setInterval( () => {
-            self._startExtractionFanTimerLoopExec();
-        }, (this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn) * 60 * 1000 );
-        this._startExtractionFanTimerLoopExec();
-    }
-
-    _startExtractionFanTimerLoopExec() {
-        var self = this;
-        self._debug(7,"Looping fan OFF");
-        self.turnExtractionFan(0);
-        setTimeout(function() {
+        this.extractionTimer = setInterval(function() {
             self._debug(7,"Looping fan ON");
             self.turnExtractionFan(1);
-        },self.conf.extractionFan.minutesOff * 60 * 1000);
+            setTimeout(function() {
+                self._debug(7,"Looping fan OFF");
+                self.turnExtractionFan(0);
+            },self.conf.extractionFan.minutesOn * 60 * 1000);
+        }, (this.conf.extractionFan.minutesOff + this.conf.extractionFan.minutesOn) * 60 * 1000 );
     }
 
     readSensor() {
