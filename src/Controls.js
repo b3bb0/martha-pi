@@ -156,13 +156,13 @@ class Controls {
                 self.mister.writeSync(ON);
             }
 
-            if (this.counter.sensor<1) {
+            if (self.counter.sensor<1) {
                 self._debug(5,"Martha humidity: "+humi+"   & temperature: "+temp);
             }
-            if (this.counter.sensor>=10) {
-                this.counter.sensor = 0;
+            if (self.counter.sensor>=10) {
+                self.counter.sensor = 0;
             } else {
-                ++this.counter.sensor;
+                ++self.counter.sensor;
             }
         });
     }
