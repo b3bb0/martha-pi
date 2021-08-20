@@ -12,9 +12,9 @@ function render(csv) {
   csv.split("\n").forEach(function(l) {
     if (l.trim().length<1) return;
     info = l.split(",");
-    dates.push(info[0]);
-    humi.push(info[1]);
-    temp.push(info[2]);
+    dates.push( parseInt(info[0]) );
+    humi.push( parseInt(info[1]) );
+    temp.push( parseInt(info[2]) );
   });
   new Chart(document.getElementById("line-chart"), {
     type: 'line',
