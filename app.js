@@ -17,9 +17,9 @@ martha.init();
 martha.run();
 
 setInterval(function() {
-    fs.appendFile('logs.csv', Date.now(),martha.humidity,martha.temperature, function (err) {
+    fs.appendFile('logs.csv', Date.now()+","+martha.humidity+","+martha.temperature+"\n", function (err) {
         if (err) console.log(err);
-      });
+    });
 },1000 * 60); // get
 
 var web = http.createServer(function (req, res) {
