@@ -58,7 +58,6 @@ class Controls {
         // initialize sensor
         if (this.conf.sensor && this.conf.sensor.gpio && this.conf.sensor.type!="none") {
             this.sensor = Sensor;
-            Sensor.initialize(this.conf.sensor.type, this.conf.sensor.gpio);
         } else {
             this.sensor = null;
         }
@@ -143,7 +142,7 @@ class Controls {
     _secondsLoop() {
         if (!this.sensor) return;
         var self = this;
-        this.sensor.read(this.conf.sensor.type, this.conf.sensor.gpio, function(r) {
+        this.sensor.read(this.conf.sensor.type, this.conf.sensor.gpio, function(err,temp,humi) {
             if (r.humidity >= self.conf.humidity.max) {
                 this._debug(6,"Turning mister OFF (sensor)");
                 this.mister.writeSync(OFF);
