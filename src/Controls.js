@@ -38,6 +38,9 @@ class Controls {
             }
         };
 
+        this.humidity = 0;
+        this.temperature = 0;
+
         this.counter = {
             monitor: 0,
             fan: 0,
@@ -148,6 +151,9 @@ class Controls {
                 self._debug(1,"Error reading from sensor",err);
                 return;
             }
+            self.humidity = Math.round(humi);
+            self.temperature = Math.round(temp);
+
             if (humi >= self.conf.humidity.max) {
                 self._debug(6,"Turning mister OFF (sensor) humidity is "+humi);
                 self.mister.writeSync(OFF);

@@ -109,3 +109,5 @@ dist
 # ignore configuration
 conf.json
 
+# ignore log file
+logs.csv
