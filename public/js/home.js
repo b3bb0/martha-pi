@@ -1,5 +1,5 @@
 $.ajax({
-  url: '/lgs.csv',
+  url: '/logs.csv',
   type: "GET",
   success: render
 });
