@@ -31,6 +31,12 @@ var web = http.createServer(function (req, res) {
         return;
     }
 
+    if (req.method === "GET" && req.url=="/logs.csv") {
+        res.writeHead(200, { "Content-Type": "text/html" });
+        fs.createReadStream("./logs.csv", "UTF-8").pipe(res);
+        return;
+    }
+
     // save configuration
     if (req.method === "POST" && req.url=="/conf.html") {
         
