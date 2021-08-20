@@ -31,8 +31,8 @@ function render(csv) {
         stacked: false,
         scales: {
           x: {
-            type: 'time',
-            time: { unit: 'month' }
+            // type: 'time',
+            // time: { unit: 'month' }
           },
           y: {
             type: 'linear',
