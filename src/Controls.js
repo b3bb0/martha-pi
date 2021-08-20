@@ -148,10 +148,10 @@ class Controls {
                 return;
             }
             if (humi >= self.conf.humidity.max) {
-                self._debug(6,"Turning mister OFF (sensor)");
+                self._debug(6,"Turning mister OFF (sensor) humidity is "+humi);
                 self.mister.writeSync(OFF);
             } else if (humi <= self.conf.humidity.min) {
-                self._debug(6,"Turning mister ON  (sensor)");
+                self._debug(6,"Turning mister ON  (sensor) humidity is "+humi);
                 self.mister.writeSync(ON);
             }
         });
