@@ -11,9 +11,9 @@ function render(csv) {
   var temp = [];
   csv.split("\n").forEach(function(l) {
     info = l.split(",");
-    dates.push(into[0]);
-    humi.push(into[1]);
-    temp.push(into[2]);
+    dates.push(info[0]);
+    humi.push(info[1]);
+    temp.push(info[2]);
   });
   new Chart(document.getElementById("line-chart"), {
     type: 'line',
