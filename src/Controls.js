@@ -143,10 +143,14 @@ class Controls {
         if (!this.sensor) return;
         var self = this;
         this.sensor.read(this.conf.sensor.type, this.conf.sensor.gpio, function(err,temp,humi) {
-            if (r.humidity >= self.conf.humidity.max) {
+            if (err) {
+                this._debug(1,"Error reading from sensor",err);
+                return;
+            }
+            if (humi >= self.conf.humidity.max) {
                 this._debug(6,"Turning mister OFF (sensor)");
                 this.mister.writeSync(OFF);
-            } else if (r.humidity <= self.conf.humidity.min) {
+            } else if (humi <= self.conf.humidity.min) {
                 this._debug(6,"Turning mister ON  (sensor)");
                 this.mister.writeSync(ON);
             }
