@@ -41,7 +41,8 @@ class Controls {
         this.counter = {
             monitor: 0,
             fan: 0,
-            mist: 0
+            mist: 0,
+            sensor: 0
         }
 
         // load previous configuration form config file
@@ -153,6 +154,15 @@ class Controls {
             } else if (humi <= self.conf.humidity.min) {
                 self._debug(6,"Turning mister ON  (sensor) humidity is "+humi);
                 self.mister.writeSync(ON);
+            }
+
+            if (this.counter.sensor<1) {
+                self._debug(5,"Martha humidity: "+humi+"   & temperature: "+temp);
+            }
+            if (this.counter.sensor>=10) {
+                this.counter.sensor = 0;
+            } else {
+                ++this.counter.sensor;
             }
         });
     }
