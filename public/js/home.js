@@ -10,7 +10,7 @@ function render(csv) {
   var humi = [];
   var temp = [];
   csv.split("\n").forEach(function(l) {
-    if (l.trim().length<1) continue;
+    if (l.trim().length<1) return;
     info = l.split(",");
     dates.push(info[0]);
     humi.push(info[1]);
