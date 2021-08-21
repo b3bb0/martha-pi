@@ -12,7 +12,7 @@ function render(csv) {
   csv.split("\n").forEach(function(l) {
     if (l.trim().length<1) return;
     info = l.split(",");
-    dates.push( parseInt(info[0]) );
+    dates.push( new moment(parseInt(info[0])) );
     humi.push( parseInt(info[1]) );
     temp.push( parseInt(info[2]) );
   });
@@ -30,10 +30,14 @@ function render(csv) {
         },
         stacked: false,
         scales: {
-          x: {
-            // type: 'time',
-            // time: { unit: 'month' }
-          },
+          xAxes: [{
+            type: 'time',
+            time: { tooltipFormat: 'YYYY-MM-DD HH:mm', },
+            //time: {
+            //  unit: 'minute',
+            //}
+            //time: { unit: 'day' }
+          }],
           y: {
             type: 'linear',
             display: true,
