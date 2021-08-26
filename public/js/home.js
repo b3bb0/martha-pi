@@ -41,7 +41,7 @@ function render(csv) {
           y: {
             type: 'linear',
             display: true,
-            position: 'right',
+            position: 'left',
             min: 10,
             max: 40,
           },
@@ -49,7 +49,7 @@ function render(csv) {
           y1: {
             type: 'linear',
             display: true,
-            position: 'left',
+            position: 'right',
             min: 70,
             max: 100,
             grid: {

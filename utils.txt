@@ -1,0 +1,8 @@
+
+# rc-local
+cd /root/martha-pi && nohup node /root/martha-pi/app.js > /root/martha.log &
+
+
+
+# cronjob
+tail -n 500 /root/martha-pi/logs.csv > /root/martha-pi/logs.csv.tmp && mv -f /root/martha-pi/logs.csv.tmp /root/martha-pi/logs.csv
