@@ -73,6 +73,7 @@ class Controls {
     init() {
 
         this._debug(2,'Booting...');
+        notifyMe('Booting...');
 
         // initialize sensor
         if (this.conf.sensor && this.conf.sensor.gpio && this.conf.sensor.type!="none") {
