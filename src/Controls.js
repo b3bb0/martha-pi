@@ -5,6 +5,7 @@
  */
 
 const fs = require("fs");
+const request = require('request');
 var Sensor = require("node-dht-sensor"); // https://www.npmjs.com/package/node-dht-sensor
 var Gpio = require('onoff').Gpio; // https://www.npmjs.com/package/onoff
 
@@ -12,6 +13,20 @@ var DEBUGLEVEL = 9;
 
 const ON = 0;
 const OFF = 1;
+
+var lastMessage = '';
+const notifyMe = function(msg) {
+    if (msg==lastMessage) return;
+
+    request( {
+        url: 'https://hooks.slack.com/services/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',
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({"text":msg})
+    }, (err) => {
+        if (!err) lastMessage = msg;
+    });
+}
 
 class Controls {
 
@@ -153,6 +168,12 @@ class Controls {
             }
             self.humidity = Math.round(humi);
             self.temperature = Math.round(temp);
+
+            if (humi >= (self.conf.humidity.max+2)) {
+                notifyMe('Is too humid in here!');
+            } else if (humi <= (self.conf.humidity.min-2)) {
+                notifyMe('Is too dry in here!');
+            }
 
             if (humi >= self.conf.humidity.max) {
                 self._debug(6,"Turning mister OFF (sensor) humidity is "+humi);
