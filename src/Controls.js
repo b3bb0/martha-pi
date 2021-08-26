@@ -19,7 +19,7 @@ const notifyMe = function(msg) {
     if (msg==lastMessage) return;
 
     request( {
-        url: 'https://hooks.slack.com/services/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',
+        url: 'https://hooks.slack.com/services/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',
         method: 'POST',
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify({"text":msg})
