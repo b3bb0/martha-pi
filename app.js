@@ -59,6 +59,8 @@ var web = http.createServer(function (req, res) {
             martha.conf.sensor.gpio = parseInt(x.sensorGPIO);
             martha.conf.sensor.type = (x.sensorType!="none"?parseInt(x.sensorType):"none");
 
+            martha.conf.slackHook = x.slackHook;
+
             martha.updateConf();
         });
     }

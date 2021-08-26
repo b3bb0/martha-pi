@@ -15,18 +15,6 @@ const ON = 0;
 const OFF = 1;
 
 var lastMessage = '';
-const notifyMe = function(msg) {
-    if (msg==lastMessage) return;
-
-    request( {
-        url: 'https://hooks.slack.com/services/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',
-        method: 'POST',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({"text":msg})
-    }, (err) => {
-        if (!err) lastMessage = msg;
-    });
-}
 
 class Controls {
 
@@ -50,7 +38,8 @@ class Controls {
             humidity: {
                 min: 85,
                 max: 95
-            }
+            },
+            slackHook: ""
         };
 
         this.humidity = 0;
@@ -73,7 +62,7 @@ class Controls {
     init() {
 
         this._debug(2,'Booting...');
-        notifyMe('Booting...');
+        this.notifyMe('Booting...');
 
         // initialize sensor
         if (this.conf.sensor && this.conf.sensor.gpio && this.conf.sensor.type!="none") {
@@ -171,9 +160,9 @@ class Controls {
             self.temperature = Math.round(temp);
 
             if (humi >= (self.conf.humidity.max+2)) {
-                notifyMe('Is too humid in here!');
+                self.notifyMe('Is too humid in here!');
             } else if (humi <= (self.conf.humidity.min-2)) {
-                notifyMe('Is too dry in here!');
+                self.notifyMe('Is too dry in here!');
             }
 
             if (humi >= self.conf.humidity.max) {
@@ -197,6 +186,20 @@ class Controls {
 
     readSensor() {
         return this.sensor.read(this.conf.sensor.type, this.conf.sensor.gpio);
+    }
+
+    notifyMe(msg) {
+        if (this.conf.slackHook && this.conf.slackHook!="")
+        if (msg==lastMessage) return;
+    
+        request( {
+            url: this.conf.slackHook,
+            method: 'POST',
+            headers: { 'Content-type': 'application/json' },
+            body: JSON.stringify({"text":msg})
+        }, (err) => {
+            if (!err) lastMessage = msg;
+        });
     }
     
     _debug(level,message) {

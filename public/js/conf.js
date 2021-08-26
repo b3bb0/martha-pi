@@ -14,6 +14,8 @@ function populateForm(conf) {
     
     $('#confForm [name="misterOn"]').val(conf.mister.minutesOn);
     $('#confForm [name="misterOff"]').val(conf.mister.minutesOff);
+
+    $('#confForm [name="slackHook"]').val(conf.slackHook);
     
 }
 
