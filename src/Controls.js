@@ -163,6 +163,8 @@ class Controls {
                 self.notifyMe('Is too humid in here!');
             } else if (humi <= (self.conf.humidity.min-2)) {
                 self.notifyMe('Is too dry in here!');
+            } else {
+                self.notifyMe();
             }
 
             if (humi >= self.conf.humidity.max) {
@@ -189,6 +191,10 @@ class Controls {
     }
 
     notifyMe(msg) {
+        if (!msg) {
+            lastMessage = msg;
+            return;
+        }
         if (this.conf.slackHook && this.conf.slackHook!="")
         if (msg==lastMessage) return;
     
